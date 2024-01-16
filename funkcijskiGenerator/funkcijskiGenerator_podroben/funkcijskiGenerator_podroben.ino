@@ -1,9 +1,12 @@
-int frekvenca = 100;    // začetna frekvenca
-int delovniCikelj = 100; // začetni delovni cikelj
+int perioda = 2;        // začetna frekvenca      [mS]
+int delovniCikelj = 50; // začetni delovni cikelj [%]
 
-int povecavaF = 10;     // povečanje frekvence
+int onTime;             //čas visokega stanja
+int offTime;            //čas nizkega stanja
+
+int povecavaP = 10;    // povečanje frekvence
 int povecavaDC = 10;    // povečanje delovnega cikla
-int zmanjsavaF = 10;    // zmanjševanje frekvence
+int zmanjsavaP = 10;   // zmanjševanje frekvence
 int zmanjsavaDC = 10;   // zmanjševanje delovnega cikla
 
 bool zastavica2 = false; // zastavice so namenjene enkratni ponovitvi kode ob pritisku gumba
@@ -19,38 +22,44 @@ void setup() {
   pinMode(8, INPUT);  // pomanjšanje frekvence
 
   digitalWrite(5, LOW);
+
+
 }
 
 void loop() {
-  digitalWrite(5, HIGH); // visoko stanje izhoda
-  delayMicroseconds(delovniCikelj);  // zakasnitev visokega stanja
-  digitalWrite(5, LOW);  // nizko stanje izhoda 
-  delayMicroseconds(frekvenca);      // zakasnitev nizkega stanja
+  
+  onTime = (perioda * delovniCikelj) / 100;  //simpl matematka za izračun visokega stanja
+  offTime = perioda - onTime;                //izračun nizkega stanja
 
-  if (digitalRead(2) == HIGH && !zastavica2) { //podaljšujemo izklopljen čas
-    frekvenca += povecavaF;
+  onTime = abs(onTime);
+  offTime = abs(offTime);
+
+  digitalWrite(5, HIGH);          // visoko stanje izhoda
+  delay(onTime);                  // zakasnitev visokega stanja
+  digitalWrite(5, LOW);           // nizko stanje izhoda 
+  delay(offTime);                 // zakasnitev nizkega stanja
+
+  if (digitalRead(2) == HIGH && !zastavica2) { //podaljšujemo periodo
+    perioda += povecavaP;
     zastavica2 = true;
   }
   
-  if (digitalRead(8) == HIGH && !zastavica8) { //zmanjšujemo izključen čas
-    frekvenca = max(1, frekvenca - zmanjsavaF);
-    zastavica8 = true;
+  if (digitalRead(8) == HIGH && !zastavica8) { //zmanjšujemo periodo
+      perioda -= zmanjsavaP;        
+      zastavica8 = true;
   }
 
-  if (digitalRead(4) == HIGH && !zastavica4) { //podaljšujemo vklopljen čas
-    delovniCikelj += povecavaDC; 
-    frekvenca -= zmanjsavaF;
+  if (digitalRead(4) == HIGH && !zastavica4) { //podaljšujemo delovni cikelj
+    delovniCikelj += povecavaDC;       
     zastavica4 = true;
   }
   
-  if (digitalRead(7) == HIGH && !zastavica7) { //zmanjšujemo vklopljen čas
-    if(delovniCikelj != 1){
-      frekvenca += povecavaF;
-    }  
-    delovniCikelj = max(1, delovniCikelj - zmanjsavaDC);
+  if (digitalRead(7) == HIGH && !zastavica7) { //zmanjšujemo delovni cikelj
+    delovniCikelj -= povecavaDC;
     zastavica7 = true;
   }
 
+class zastavce;
   if (digitalRead(2) == LOW) {
     zastavica2 = false;
   }
@@ -64,10 +73,4 @@ void loop() {
     zastavica8 = false;
   }
 
-  if (frekvenca <= 0) {
-    frekvenca++;
-  }
-  if (delovniCikelj <= 0) {
-    delovniCikelj++;
-  }
 }
