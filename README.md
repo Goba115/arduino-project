@@ -1,3 +1,3 @@
-#project <arduino>;
+#project \<arduino\>;
 
 //dalam na več projektih
