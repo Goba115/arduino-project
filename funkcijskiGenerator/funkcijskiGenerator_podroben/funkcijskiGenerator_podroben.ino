@@ -23,32 +23,33 @@ void setup() {
   pinMode(8, INPUT);       // pomanjšanje periode
 
   Serial.begin(9600);
+  Serial.println("povezava uspela! ");
 
 }
 
 void loop() {
   
-  if (perioda < 250){
-    perioda = 250;
+  if (perioda < 500){ //zaščita proti prekoračanju meje najvisje frekvence
+    perioda = 500;
   }
 
   onTime = (perioda * delovniCikelj) / delitelj;  //simpl matematka za izračun visokega stanja
   offTime = perioda - onTime;                     //izračun nizkega stanja
 
 
-  if(onTime < 1){
+  if(onTime < 1){     // dodatna zaščita za visoko stanje
     onTime = 10;    
   }
 
-  if(offTime < 1){
+  if(offTime < 1){    // dodatna zaščita za nizko stanje
     offTime = 10;    
   }
 
-  if(delovniCikelj >= 95){
+  if(delovniCikelj >= 95){ //zaščita proti prekoračanju meje najvisje vrednosti delovnega cikla
   delovniCikelj = 95;  
   }
 
-  if(delovniCikelj <= 5){
+  if(delovniCikelj <= 5){  //zaščita proti prekoračanju meje najvisje vrednosti delovnega cikla
   delovniCikelj = 5;  
   }
 
@@ -62,9 +63,9 @@ void loop() {
     perioda += povecavaP;
     zastavica2 = true;
 
-    Serial.println("onTime");
+    Serial.println("onTime  [mS]");
     Serial.println(onTime);
-    Serial.println("offTime");
+    Serial.println("offTime [mS]");
     Serial.println(offTime);
   }
   
@@ -72,9 +73,9 @@ void loop() {
     perioda -= zmanjsavaP;        
     zastavica8 = true;
 
-    Serial.println("onTime");
+    Serial.println("onTime  [mS]");
     Serial.println(onTime);
-    Serial.println("offTime");
+    Serial.println("offTime [mS]");
     Serial.println(offTime);
   }
 
@@ -82,7 +83,7 @@ void loop() {
     delovniCikelj += povecavaDC;       
     zastavica4 = true;
 
-    Serial.println("delovni cikelj");
+    Serial.println("delovni cikelj [%]");
     Serial.println(delovniCikelj);
   }
 
@@ -90,13 +91,12 @@ void loop() {
     delovniCikelj -= povecavaDC;
     zastavica7 = true;
     
-    Serial.println("delovni cikelj");
+    Serial.println("delovni cikelj [%]");
     Serial.println(delovniCikelj);
   }
 
 
-class zastavice;
-
+class zastavice;  //namenjene, da preverijo, da se je ukaz samo enkrat ponovil
   if (digitalRead(2) == LOW){
     zastavica2 = false;
   }
