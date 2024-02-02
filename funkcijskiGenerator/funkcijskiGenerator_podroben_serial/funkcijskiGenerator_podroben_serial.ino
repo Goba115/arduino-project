@@ -5,7 +5,6 @@ int delitelj = 100;       // delitelj, da zračunamo onTime
 long onTime;              //čas visokega stanja
 long offTime;             //čas nizkega stanja
 
-
 int povecavaP = 500;      // povečanje periode
 int zmanjsavaP = 500;     // zmanjševanje periode
 float povecavaDC = 5;     // povečanje delovnega cikla
@@ -23,6 +22,8 @@ void setup() {
   pinMode(7, INPUT);       // pomanjšanje delovnega cikla
   pinMode(8, INPUT);       // pomanjšanje periode
 
+  Serial.begin(9600);
+  Serial.println("povezava uspela! ");
 
 }
 
@@ -62,24 +63,36 @@ void loop() {
     perioda += povecavaP;
     zastavica2 = true;
 
+    Serial.println("onTime  [mS]");
+    Serial.println(onTime);
+    Serial.println("offTime [mS]");
+    Serial.println(offTime);
   }
   
   if (digitalRead(8) == HIGH && !zastavica8){  //zmanjšujemo periodo
     perioda -= zmanjsavaP;        
     zastavica8 = true;
 
+    Serial.println("onTime  [mS]");
+    Serial.println(onTime);
+    Serial.println("offTime [mS]");
+    Serial.println(offTime);
   }
 
   if (digitalRead(4) == HIGH && !zastavica4){ //podaljšujemo delovni cikelj
     delovniCikelj += povecavaDC;       
     zastavica4 = true;
 
+    Serial.println("delovni cikelj [%]");
+    Serial.println(delovniCikelj);
   }
 
   if (digitalRead(7) == HIGH && !zastavica7){ //zmanjšujemo delovni cikelj
     delovniCikelj -= povecavaDC;
     zastavica7 = true;
     
+    Serial.println("delovni cikelj [%]");
+    Serial.println(delovniCikelj);
   }
 
 
