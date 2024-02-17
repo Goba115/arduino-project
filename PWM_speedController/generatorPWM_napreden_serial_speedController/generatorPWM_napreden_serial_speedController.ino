@@ -1,7 +1,7 @@
 int VhodniPin = A2;     //napetostni delilnik priključimo na analogni pin
 int IzhodniPin = 5;     //izhodni signal na pinu 5
 int pozitivniPin = A4;  //pozitivna stran potenciometra
-int negativniPin = A=   //negativna stran potenciometra
+int negativniPin = A0;   //negativna stran potenciometra
 int knof = 2;           //knof za izvajanje funkcije testiranjeVezja()
 
 int beri();              //funkcije
@@ -9,7 +9,7 @@ void pisi();
 int porocaj();
 void testirajVezje();
 void normalnaUporaba();
-void 
+
 
 
 void setup() {
@@ -33,9 +33,6 @@ void setup() {
 void loop() {
   if ()
   normalnaUporaba();
-
-
-
 }
 
 int beri() {
@@ -75,9 +72,9 @@ void testirajVezje(int x){
 
 void normalnaUporaba(){
 
-  beri();
+  int x = beri();
   pisi();
-  Serial.println(porocaj(beri()));  
+  Serial.println(porocaj(x));  
   delay(10);
   
 }
