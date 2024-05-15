@@ -11,11 +11,12 @@ byte dotOff[] = { 0b00000, 0b01110, 0b10001, 0b10001,
 byte dotOn[] = { 0b00000, 0b01110, 0b11111, 0b11111,
                  0b11111, 0b01110, 0b00000, 0b00000 };
 
-bool stanje = 1;
-bool zastavica = 1;
-short stikalo = 3;
-short rele1 = 10;
-int osvezevanje;
+bool stanje = 1;    //stanje zaslona osvetljen/zatemnjen
+bool zastavica = 1; //zastavica
+short stikalo = 3;  //pin stikalo za menjavo stanja
+short rele1 = 10;   //pin za izhod na rele
+int osvezevanje;    //osvezevanje zaslona [mS]
+int mejnaVrednost = 50; //kdaj se priključi rele
 
 void setup() {
   
@@ -39,13 +40,86 @@ void setup() {
   pinMode(7, INPUT_PULLUP);
 
   osvezevanje = 100;
-  if (digitalRead(9) == LOW){
-    osvezevanje = 1000;
-    }
+  if (digitalRead(9) == LOW){osvezevanje = 1000;}
   if (digitalRead(8) == LOW){osvezevanje = 500;}
   if (digitalRead(7) == LOW){osvezevanje = 75;}
 }
 
+
+
+/*
+void loop() {
+  if (show == 0) {
+    lcd.setBacklight(255);
+    lcd.home();
+    lcd.clear();
+    lcd.print("Hello LCD");
+    delay(1000);
+
+    lcd.setBacklight(0);
+    delay(400);
+    lcd.setBacklight(255);
+
+  } else if (show == 1) {
+    lcd.clear();
+    lcd.print("Cursor On");
+    lcd.cursor();
+
+  } else if (show == 2) {
+    lcd.clear();
+    lcd.print("Cursor Blink");
+    lcd.blink();
+
+  } else if (show == 3) {
+    lcd.clear();
+    lcd.print("Cursor OFF");
+    lcd.noBlink();
+    lcd.noCursor();
+
+  } else if (show == 4) {
+    lcd.clear();
+    lcd.print("Display Off");
+    lcd.noDisplay();
+
+  } else if (show == 5) {
+    lcd.clear();
+    lcd.print("Display On");
+    lcd.display();
+
+  } else if (show == 7) {
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("*** first line.");
+    lcd.setCursor(0, 1);
+    lcd.print("*** second line.");
+
+  } else if (show == 8) {
+    lcd.scrollDisplayLeft();
+  } else if (show == 9) {
+    lcd.scrollDisplayLeft();
+  } else if (show == 10) {
+    lcd.scrollDisplayLeft();
+  } else if (show == 11) {
+    lcd.scrollDisplayRight();
+
+  } else if (show == 12) {
+    lcd.clear();
+    lcd.print("write-");
+
+  } else if (show == 13) {
+    lcd.clear();
+    lcd.print("custom 1:<\01>");
+    lcd.setCursor(0, 1);
+    lcd.print("custom 2:<\02>");
+
+  } else {
+    lcd.print(show - 13);
+  }  // if
+
+  delay(1400);
+  show = (show + 1) % 16;
+}  // loop()
+*/
 void loop(){
   if (digitalRead(stikalo) == LOW && zastavica == 1){
     stanje = !stanje;
@@ -65,7 +139,7 @@ void loop(){
   lcd.print(meri);
   lcd.print("%");
 
-  if (meri >= 50){
+  if (meri >= mejnaVrednost){
     digitalWrite(rele1, HIGH);
   }
   else {digitalWrite(rele1, LOW);}
